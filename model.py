@@ -71,7 +71,7 @@ def final_result(query):
 
 # Streamlit code
 def main():
-    st.title("Medical ChatBot")
+    st.title("Medical Treatment and Diagnosis ChatBot")
     st.write("Starting the bot...")
     st.write("Hi, Welcome to Medical ChatBot. What is your query?")
     query = st.text_input("Enter your query:")
