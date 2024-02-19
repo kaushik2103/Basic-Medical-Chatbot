@@ -71,6 +71,7 @@ def final_result(query):
 
 # Streamlit code
 def main():
+    st.set_page_config(page_title="Medical ChatBot", page_icon=":robot:")
     st.title("Medical Treatment and Diagnosis ChatBot")
     st.write("Starting the bot...")
     st.write("Hi, Welcome to Medical ChatBot. What is your query?")
