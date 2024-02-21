@@ -5,11 +5,13 @@ from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
 import streamlit as st
+import ingest as ig
 
 DB_FAISS_PATH = 'vectorstore/db_faiss'
 
-custom_prompt_template = """Use the following pieces of information to provide reason of the illness, recommendations 
-for treatments and medicine to address the user's question. I want the corresponding response in two lines.
+custom_prompt_template = """Use the following pieces of information to answer the user's question.
+If you don't know the answer, just say that you don't know, don't try to make up an answer.
+if you know the answer, just provide the medication, treatments and diagnosis.
 
 Context: {context}
 Question: {question}
@@ -31,7 +33,7 @@ def set_custom_prompt():
 def retrieval_qa_chain(llm, prompt, db):
     qa_chain = RetrievalQA.from_chain_type(llm=llm,
                                            chain_type='stuff',
-                                           retriever=db.as_retriever(search_kwargs={'k': 2}),
+                                           retriever=db.as_retriever(search_kwargs={'k': 3}),
                                            return_source_documents=True,
                                            chain_type_kwargs={'prompt': prompt}
                                            )
@@ -44,8 +46,8 @@ def load_llm():
     llm = CTransformers(
         model="TheBloke/Llama-2-7B-Chat-GGML",
         model_type="llama",
-        max_new_tokens=512,
-        temperature=0.3
+        max_new_tokens=500,
+        temperature=0.5
     )
     return llm
 

@@ -9,20 +9,25 @@ DB_FAISS_PATH = 'vectorstore/db_faiss'
 
 # Create vector database
 def create_vector_db():
+    print("Loading documents...")
     loader = DirectoryLoader(DATA_PATH,
                              glob='*.pdf',
                              loader_cls=PyPDFLoader)
 
     documents = loader.load()
+    print("Text spliting...")
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500,
-                                                   chunk_overlap=50)
+                                                   chunk_overlap=10)
     texts = text_splitter.split_documents(documents)
 
+    print("Embedding documents...")
     embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2',
                                        model_kwargs={'device': 'cpu'})
 
+    print("Creating vector database...")
     db = FAISS.from_documents(texts, embeddings)
     db.save_local(DB_FAISS_PATH)
+    print("Vector database created successfully")
 
 
 if __name__ == "__main__":
